@@ -47,3 +47,23 @@ public:
         return {};
     }
 };
+
+
+class Solution{
+public:
+    vector<int> twoSum(vector<int> &nums, int target){
+        // 先定义map, <value, index>
+        unordered_map <int, int> map;
+        // 建立循环
+        for(int i=0; i<nums.size(); i++){
+            // 遍历元素，在map中寻找是否存在当前元素对应的差值
+            std::unordered_map<int, int>::iterator iter = map.find(target - nums[i]);
+            if(iter != map.end()){
+                return {iter->second, i};
+            }
+            // 若没有匹配对象，就将当前迭代对象插入到map中。注意插入对象结构为<value, index>
+            map.insert(pair<int, int> (nums[i], i));
+        }
+        return {};
+    }
+};
