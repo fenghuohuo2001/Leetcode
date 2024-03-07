@@ -39,7 +39,7 @@ int main1(){
     return 0;
 }
 
-int main(){
+int main2(){
     // 定义一个字符串
     string s;
     while(cin >> s){
