@@ -97,19 +97,51 @@ public:
             return lhs.second > rhs.second;
         }
     };
-
     vector<int> topKFrequent(vector<int> &nums, int k){
         // 统计元素出现的频率
         unordered_map<int, int> map;    
         for(int i=0; i<nums.size(); i++){
             map[nums[i]]++;
         }
-
         // 对频率排序
         // 定义一个小顶堆
         priority_queue<pair<int, int>, vector<pair<int, int>>, mycomparsion> pri_que;
-
         // 用固定大小的小顶堆扫描所有频率数值
+        for(unordered_map<int, int>::iterator it = map.begin(); it != map.end(); it++){
+            pri_que.push(*it);
+            if(pri_que.size() > k){
+                pri_que.pop();
+            }
+        }
+        // 找出前k个高频元素
+        vector<int> result(k);
+        for(int i = k-1; i>=0; i--){
+            result[i] = pri_que.top().first;
+            pri_que.pop();
+        }
+        return result;
+    }
+};
+
+class Solution{
+public:
+    // 小顶堆
+    class mycomparsion{
+    public:
+        bool operator()(const pair<int, int> &lhs, const pair<int, int> &rhs){
+            return lhs.second > rhs.second;
+        }
+    };
+
+    vector<int> topKFrequent(vector<int> &nums, int k){
+        unordered_map<int, int> map;
+        for(int i=0; i<nums.size(); i++){
+            map[nums[i]]++;
+        }
+
+        // 定义小顶堆
+        priority_queue<pair<int, int>, vector<pair<int, int>>, mycomparsion> pri_que;
+
         for(unordered_map<int, int>::iterator it = map.begin(); it != map.end(); it++){
             pri_que.push(*it);
             if(pri_que.size() > k){
@@ -119,10 +151,10 @@ public:
 
         // 找出前k个高频元素
         vector<int> result(k);
-        for(int i = k-1; i>=0; i--){
+        for(int i=k-1; i>=0; i--){
             result[i] = pri_que.top().first;
             pri_que.pop();
         }
-        return result;
+        return result; 
     }
 };
