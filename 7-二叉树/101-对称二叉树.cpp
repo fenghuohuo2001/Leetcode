@@ -39,6 +39,8 @@ void post_traversal_iter(TreeNode* root, vector<int> &result){
     }
 }
 
+
+/* 均可以分解为子树的外侧和内侧是否相等 */
 // 递归法
 class Solution {
 public:
@@ -63,6 +65,26 @@ public:
     }
 };
 
+class Solution{
+public:
+    bool compare(TreeNode* left, TreeNode* right){
+        if(left!=nullptr && right==nullptr) return false; 
+        else if(left==nullptr && right!=nullptr) return false; 
+        else if(left==nullptr && right==nullptr) return true;
+        else if(left->val != right->val) return false;
+
+        bool outside = compare(left->left, right->right); 
+        bool inside = compare(left->right, right->left);
+        return outside && inside; 
+    }
+
+    bool isSymmetric(TreeNode* root){
+        if(root == nullptr) return true;
+        return compare(root->left, root->right);
+    }
+};
+
+
 // 迭代法
 class Solution{
 public:
@@ -73,7 +95,75 @@ public:
         que.push(root->right);
         
         while(!que.empty()){
+            TreeNode* leftnode = que.front();
+            que.pop();
+            TreeNode* rightnode = que.front();
+            que.pop();
+            // 先判断是否为空
+            if(leftnode==nullptr && rightnode==nullptr){
+                continue;
+            }
             
+            if(leftnode==nullptr || rightnode==nullptr || (leftnode->val != rightnode->val)){
+                return false;
+            }
+            // 当均不为空且相等时
+            que.push(leftnode->left);
+            que.push(rightnode->right);
+            que.push(leftnode->right);
+            que.push(rightnode->left);
         }
+        return true;
+    }
+};
+
+
+class Solution{
+public:
+    bool compare(TreeNode* left, TreeNode* right){
+        if(left==nullptr && right!=nullptr) return false;
+        else if(left!=nullptr && right==nullptr) return false;
+        else if(left==nullptr && right==nullptr) return true;
+        else if(left->val != right->val) return false;
+        return compare(left->left, right->right) && compare(left->right, right->left);
+    }
+
+    bool isSymmetric(TreeNode* root){
+        // 先判断root
+        if(root == nullptr) return true;
+        // 再写递归
+        return compare(root->left, root->right);
+    }
+};
+
+class Solution{
+public:
+    bool isSymmetric(TreeNode* root){
+        if(root == nullptr) return true;
+        queue<TreeNode*> que;
+        que.push(root->left);
+        que.push(root->right);
+
+        while(!que.empty()){
+            TreeNode* leftnode = que.front();
+            que.pop();
+            TreeNode* rightnode = que.front();
+            que.pop();
+            if(leftnode==nullptr && rightnode==nullptr){
+                continue;
+            }
+
+            if(leftnode==nullptr || rightnode==nullptr || (leftnode->val != rightnode->val)){
+                return false;
+            }
+
+            que.push(leftnode->left);
+            que.push(rightnode->right);
+            que.push(leftnode->right);
+            que.push(rightnode->left);
+
+
+        }
+        return true;
     }
 };
